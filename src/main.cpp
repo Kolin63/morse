@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) Colin Melican 2025
 
+#include <cassert>
+#include <cmath>
+#include <cstdint>
 #include <iostream>
 #include <map>
 #include <ostream>
 #include <string>
-#include <string_view>
 
 enum class Error {
   OK,
@@ -23,8 +25,6 @@ std::ostream& operator<<(std::ostream& out, Error err) {
   return out << "Unknown Error";
 }
 
-constexpr const char* input = ".---.------.-.--";
-
 const std::map<std::string, char> morse{
     {".-", 'A'},    {"-...", 'B'},  {"-.-.", 'C'},  {"-..", 'D'},
     {".", 'E'},     {"..-.", 'F'},  {"--.", 'G'},   {"....", 'H'},
@@ -38,7 +38,8 @@ const std::map<std::string, char> morse{
 };
 
 std::string MakeWord(std::string str, Error* err) {
-  if (str[str.size() - 1] != ' ') [[likely]] str += ' ';
+  if (str[str.size() - 1] != ' ') [[likely]]
+    str += ' ';
   std::string word{};
   std::string char_morse{};
   for (char i : str) {
@@ -64,7 +65,26 @@ std::string MakeWord(std::string str, Error* err) {
 }
 
 int main() {
-  Error err;
-  std::cout << MakeWord("... --- ...", &err) << "\tError: " << err << '\n';
+  // TODO(kolin63): make this read from stdin
+  const std::string input = ".---.------.-.--";
+  const size_t len{input.size()};
+  assert(len > 0 && len < 64);
+  const uint64_t max_count{static_cast<uint64_t>(std::pow(2, len - 1))};
+
+  // 1 indicates a space should come before the respective char
+  for (uint64_t space_mask{}; space_mask < max_count; ++space_mask) {
+    std::string fstr{};
+    for (size_t i{}; i < len; ++i) {
+      const int space_bit_mask{1 << (len - 1 - i)};
+      if (space_mask & space_bit_mask) fstr += ' ';
+      fstr += input[i];
+    }
+    Error err;
+    std::string out{MakeWord(fstr, &err)};
+    if (err == Error::OK) {
+      std::cout << space_mask << ": " << out << " (" << fstr << ")\n";
+    }
+  }
+
   return 0;
 }
