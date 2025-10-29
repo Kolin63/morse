@@ -10,6 +10,7 @@
 #include <string>
 
 #include "error.hpp"
+#include "logger.hpp"
 
 const std::map<std::string, char> morse{
     {".-", 'A'},    {"-...", 'B'},  {"-.-.", 'C'},  {"-..", 'D'},
@@ -57,6 +58,8 @@ int main() {
   assert(len > 0 && len < 64);
   const uint64_t max_count{static_cast<uint64_t>(std::pow(2, len - 1))};
 
+  Logger logger{"out.txt"};
+
   // 1 indicates a space should come before the respective char
   for (uint64_t space_mask{}; space_mask < max_count; ++space_mask) {
     std::string fstr{};
@@ -68,6 +71,7 @@ int main() {
     Error err;
     std::string out{MakeWord(fstr, &err)};
     if (err == Error::OK) {
+      logger.Log(out);
       std::cout << space_mask << ": " << out << " (" << fstr << ")\n";
     }
   }
