@@ -9,21 +9,7 @@
 #include <ostream>
 #include <string>
 
-enum class Error {
-  OK,
-  NOT_A_CHAR,
-};
-
-std::ostream& operator<<(std::ostream& out, Error err) {
-  using enum Error;
-  switch (err) {
-    case OK:
-      return out << "OK";
-    case NOT_A_CHAR:
-      return out << "Not a char";
-  }
-  return out << "Unknown Error";
-}
+#include "error.hpp"
 
 const std::map<std::string, char> morse{
     {".-", 'A'},    {"-...", 'B'},  {"-.-.", 'C'},  {"-..", 'D'},
