@@ -1,5 +1,6 @@
 .cache/
 build/
 compile_commands.json
-morse
 out.txt
+lister
+checker
