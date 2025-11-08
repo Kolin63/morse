@@ -4,3 +4,5 @@ compile_commands.json
 out.txt
 lister
 checker
+!src/lister/
+!src/checker/
