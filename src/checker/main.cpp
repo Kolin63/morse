@@ -37,6 +37,11 @@ bool XNCharCheck(char x, int n, std::string_view line) {
   return true;
 }
 
+// returns true if pattern is present in line
+bool Subsearch(std::string_view line, std::string_view pattern) {
+  return !line.find(pattern);
+}
+
 int main() {
   // open the file
   const std::string file_name{"out.txt"};
@@ -61,6 +66,8 @@ int main() {
     if (!XNCharCheck('H', 2, line)) continue;
     if (!XNCharCheck('K', 2, line)) continue;
     if (!XNCharCheck('A', 2, line)) continue;
+    if (Subsearch(line, "JW")) continue;
+    if (Subsearch(line, "AO")) continue;
     std::cout << line << '\n';
   }
 
